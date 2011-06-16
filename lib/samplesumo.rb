@@ -27,7 +27,7 @@ module Samplesumo
 
   def self.upload(filename)
     payload = { :file => Faraday::UploadIO.new(filename, "audio/mp3") }
-    post("#{config.api_root}/upload", payload)["status_url"] || false
+    post("#{config.api_root}/upload/", payload)["status_url"] || false
   end
 
   def self.processed?(url)
@@ -60,4 +60,11 @@ private
     response = connection.get(path)
     JSON.parse(response.body)
   end
+
+end
+
+# TODO
+Samplesumo.configure do |config|
+  config.api_root = "http://api.samplesumo.com/melotranscript"
+  config.api_key  = "CCC8094CEEAC3B9AAFDAACC49857CD12"
 end

@@ -29,12 +29,17 @@ module Canoris
     get(collection ? "collections/#{collection["key"]}/files" : "files")
   end
 
+  def self.analysis(file)
+    get("files/#{file["key"]}/analysis")
+  end
+
   def self.upload(filename)
-    post("files", :file => Faraday::UploadIO.new(filename, "audio/mp3"))
+    file = post("files", :file => Faraday::UploadIO.new(filename, "audio/x-wav"))
+    add_file_to_collection(collections.first, file)
   end
 
   def self.collections
-    get("collections")
+    get("collections")["items"]
   end
 
   def self.create_collection(name)

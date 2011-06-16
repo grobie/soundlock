@@ -1,3 +1,5 @@
 api_keys.yaml
 .DS_Store
 resources/*
+db/*
+test/*

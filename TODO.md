@@ -8,10 +8,13 @@
 
 1. Algorithm to detect similarity
 
-* needs to check 2 dimensions (tone and time)
+* only time first (claps)
 * fuzzy
 * calculate result value
+* needs to check 2 dimensions (tone and time)
 
-* sinatra up and running
-* record sounds with flash/html5
-* upload to canoris
+x sinatra up and running
+x record sounds with flash/html5
+x upload to canoris
+
+* polish UI
