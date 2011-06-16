@@ -12,10 +12,6 @@
 * fuzzy
 * calculate result value
 
-2. Upload to AppSumo
-
-3. Download from SoundCloud
-
-4. Record to SoundCloud
-
-5. Display notes with Musescore
+* sinatra up and running
+* record sounds with flash/html5
+* upload to canoris
