@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>SoundLock</title>
+<link href="/css/general.css" media="all" rel="stylesheet" type="text/css" />
+
+<script src="/jquery1.4.2.js"></script>
+<script type="text/javascript" src="/js/swfobject.js"></script>
+<script type="text/javascript" src="/js/recorder.js"></script>
+<script type="text/javascript">
+$(function() {
+  var appWidth = 24;
+  var appHeight = 24;
+  var flashvars = {'event_handler': 'microphone_recorder_events', 'upload_image': 'images/upload.png'};
+  var params = {};
+  var attributes = {'id': "recorderApp", 'name':  "recorderApp"};
+  swfobject.embedSWF("recorder.swf", "flashcontent", appWidth, appHeight, "10.1.0", "", flashvars, params, attributes);
+});
+</script>
+
+</head>
+
+<body>
+<div id="container">
+  <%= yield %>
+</div>
+</body>
+</html>
+
+

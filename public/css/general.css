@@ -1,0 +1,60 @@
+html, body {
+  background-color: #4B7399;
+  font-family: Verdana, Helvetica, Arial;
+  font-size: 14px;
+  color: #444;
+}
+
+a img {
+  border: none;
+}
+
+a {
+  color: #0000FF;
+}
+
+.clear {
+  clear: both;
+  height: 0;
+  overflow: hidden;
+}
+
+#container {
+  width: 75%;
+  margin: 0 auto;
+  background-color: #FFF;
+  padding: 20px 40px;
+  border: solid 1px black;
+  margin-top: 20px;
+}
+
+h1 {
+  margin: 0 0 20px 0;
+  padding: 20px 0 20px 60px;
+}
+h1.closed {
+  background: url(/images/lock_small.png) no-repeat 0px 10px;
+}
+h1.open {
+  background: url(/images/lock_open_small.png) no-repeat 0px 10px;
+}
+h1 a {
+  text-decoration: none;
+  color: #444;
+}
+
+table {
+  margin: 40px 0 0;
+}
+th {
+  text-align: left;
+}
+th, td {
+  padding: 2px 10px;
+}
+
+#control_panel { white-space: nowrap; }
+#control_panel a { outline: none; display: inline-block; width: 24px; height: 24px; }
+#control_panel a img { border: 0; }
+#save_button { position: absolute; padding: 0; margin: 0; }
+#play_button { display: inline-block; }

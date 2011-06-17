@@ -62,8 +62,12 @@ module Echonest
       @lock ||= lock_id ? self.class.find(lock_id) : nil
     end
 
+    def lock?
+      lock_id.nil?
+    end
+
     def created_at
-      Time.at(data["created_at"])
+      Time.at(data["created_at"].to_i)
     end
 
     def filename

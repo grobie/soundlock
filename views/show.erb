@@ -1,77 +1,43 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<title>SoundLock</title>
-<script src="/jquery1.4.2.js"></script>
-<script type="text/javascript" src="/js/swfobject.js"></script>
-<script type="text/javascript" src="/js/recorder.js"></script>
+<h1 class="closed"><a href="/">SoundLock</a></h1>
+<p>Solve this password lock</p>
 
-<script type="text/javascript">
-$(function() {
-  var appWidth = 24;
-  var appHeight = 24;
-  var flashvars = {'event_handler': 'microphone_recorder_events', 'upload_image': '/images/upload.png'};
-  var params = {};
-  var attributes = {'id': "recorderApp", 'name':  "recorderApp"};
-  swfobject.embedSWF("/recorder.swf", "flashcontent", appWidth, appHeight, "10.1.0", "", flashvars, params, attributes);
-});
-</script>
+<audio controls="controls"  autoplay="autoplay">
+  <source src="/locks/<%= @lock.filename %>">
+</audio>
 
-<style>
-#control_panel { white-space: nowrap; }
-#control_panel a { outline: none; display: inline-block; width: 24px; height: 24px; }
-#control_panel a img { border: 0; }
-#save_button { position: absolute; padding: 0; margin: 0; }
-#play_button { display: inline-block; }
-</style>
-</head>
+<div id="status">
+ Recorder Status...
+</div>
 
-<body>
-  <h1>SoundLock</h1>
-  <p>Solve this password lock</p>
-
-  <audio controls="controls"  autoplay="autoplay">
-    <source src="/locks/<%= @lock.filename %>">
-  </audio>
-
-  <div id="status">
-   Recorder Status...
-  </div>
-
-  <div id="control_panel">
-    <a id="record_button" onclick="Recorder.record('audio', 'audio.wav');" href="javascript:void(0);" title="Record"><img src="/images/record.png" width="24" height="24" alt="Record"/></a>
-    <span id="save_button">
-      <span id="flashcontent">
-        <p>Your browser must have JavaScript enabled and the Adobe Flash Player installed.</p>
-      </span>
+<div id="control_panel">
+  <a id="record_button" onclick="Recorder.record('audio', 'audio.wav');" href="javascript:void(0);" title="Record"><img src="/images/record.png" width="24" height="24" alt="Record"/></a>
+  <span id="save_button">
+    <span id="flashcontent">
+      <p>Your browser must have JavaScript enabled and the Adobe Flash Player installed.</p>
     </span>
-    <a id="play_button" style="display:none;" onclick="Recorder.playBack('audio');" href="javascript:void(0);" title="Play"><img src="/images/play.png" width="24" height="24" alt="Play"/></a>
-  </div>
+  </span>
+  <a id="play_button" style="display:none;" onclick="Recorder.playBack('audio');" href="javascript:void(0);" title="Play"><img src="/images/play.png" width="24" height="24" alt="Play"/></a>
+</div>
 
-  <div id="upload_status">
-  </div>
+<div id="upload_status">
+</div>
 
-  <form id="uploadForm" action="/lock/<%= @lock.id %>" method="post">
-  </form>
+<form id="uploadForm" action="/lock/<%= @lock.id %>" method="post">
+</form>
 
-  <table id="solvers">
-    <tr>
-      <th>#</th>
-      <th>at</th>
-      <th>distance</th>
-      <th>beats</th>
-    </tr>
-  <% @lock.solvers.each do |solver| %>
-    <tr>
-      <td><%= solver.id %></td>
-      <td><%= solver.created_at %></td>
-      <td><%= solver.distance_to(@lock) %></td>
-      <td><%= solver.beats.inspect %></td>
-    </tr>
-  <% end %>
-  </ul>
-
-</body>
-</html>
-
-
+<table id="solvers">
+  <tr>
+    <th>#</th>
+    <th>at</th>
+    <th>distance</th>
+    <th>beats</th>
+  </tr>
+<% @lock.solvers.sort_by(&:created_at).each do |solver| %>
+  <tr>
+    <td><%= solver.id %></td>
+    <td><%= solver.created_at.strftime("%Y-%m-%d %I:%M") %></td>
+    <td><%= solver.distance_to(@lock) %></td>
+    <td><%= solver.beats.inspect %></td>
+  </tr>
+<% end %>
+</ul>

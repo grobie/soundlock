@@ -19,7 +19,7 @@ class Soundlock < Sinatra::Base
   set :locks,   File.expand_path("locks",   settings.public)
 
   get "/" do
-    @tracks = Echonest::Track.all
+    @locks = Echonest::Track.all.select(&:lock?)
     erb :index
   end
 
