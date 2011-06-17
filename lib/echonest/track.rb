@@ -3,7 +3,7 @@ require "rack"
 module Echonest
   class Track
     CONFIDENCE_THRESHOLD = 0.85
-    SIMILARITY_THRESHOLD = 0.2
+    SIMILARITY_MINIMUM = 0.5
 
     attr_accessor :data
 
@@ -15,6 +15,11 @@ module Echonest
     def self.create(filename)
       data = upload(filename)
       new(data["track"]).save
+    end
+
+    def self.find(id)
+      data = Echonest.store.get("echonest:track:#{id}")
+      data ? new(JSON.parse(data)) : nil
     end
 
     def self.upload(filename)
@@ -86,7 +91,9 @@ module Echonest
       sum = [distances.size, other.distances.size].max.times.inject(0) do |m, i|
         m += ((distances[i] || 0) - (other.distances[i] || 0)) ** 2
       end
-      Math.sqrt(sum) < SIMILARITY_THRESHOLD
+      distance = Math.sqrt(sum)
+      puts "Distance: #{distance}"
+      distance < SIMILARITY_MINIMUM
     end
 
     def beats

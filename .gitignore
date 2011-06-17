@@ -3,3 +3,4 @@ api_keys.yaml
 resources/*
 db/*
 test/*
+public/locks/*

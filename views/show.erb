@@ -10,10 +10,10 @@
 $(function() {
   var appWidth = 24;
   var appHeight = 24;
-  var flashvars = {'event_handler': 'microphone_recorder_events', 'upload_image': 'images/upload.png'};
+  var flashvars = {'event_handler': 'microphone_recorder_events', 'upload_image': '/images/upload.png'};
   var params = {};
   var attributes = {'id': "recorderApp", 'name':  "recorderApp"};
-  swfobject.embedSWF("recorder.swf", "flashcontent", appWidth, appHeight, "10.1.0", "", flashvars, params, attributes);
+  swfobject.embedSWF("/recorder.swf", "flashcontent", appWidth, appHeight, "10.1.0", "", flashvars, params, attributes);
 });
 </script>
 
@@ -27,6 +27,13 @@ $(function() {
 </head>
 
 <body>
+  <h1>SoundLock</h1>
+  <p>Solve this password lock</p>
+
+  <audio controls="controls"  autoplay="autoplay">
+    <source src="/locks/upload1308283446.wav">
+  </audio>
+
   <div id="status">
    Recorder Status...
   </div>
@@ -44,14 +51,8 @@ $(function() {
   <div id="upload_status">
   </div>
 
-  <form id="uploadForm" action="/record" method="post">
+  <form id="uploadForm" action="/lock/<%= @lock.id %>" method="post">
   </form>
-
-  <ul id="tracks">
-    <% @tracks.each do |track| %>
-      <li><a href="/lock/<%= track.id %>"><%= track.id %></a></li>
-    <% end %>
-  </ul>
 
 </body>
 </html>

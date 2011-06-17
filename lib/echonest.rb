@@ -32,7 +32,9 @@ module Echonest
   end
 
   def self.post(path, payload = {}, headers = {})
+    puts "Echonest#post to #{path}"
     response = connection.post(path, payload, headers)
+    puts "Echonest#post finished"
     JSON.parse(response.body)["response"]
   end
 

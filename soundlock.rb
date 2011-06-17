@@ -18,20 +18,34 @@ class Soundlock < Sinatra::Base
   set :files,  File.expand_path("resources", settings.root)
 
   get "/" do
+    @tracks = Echonest::Track.all
     erb :index
   end
 
   post "/record" do
-    upload = params[:file]
-    destination = File.join(settings.files, "upload#{Time.now.to_i}.wav")
-    FileUtils.mv(upload[:tempfile].path, destination) && FileUtils.chmod(0640, destination)
-
-    Echonest::Track.create(destination)
+    upload(params[:file])
 
     "saved"
   end
 
-  get "/track/:id" do
+  get "/lock/:id" do
+    @lock = Echonest::Track.find(params[:id])
     erb :show
+  end
+
+  post "/lock/:id" do
+    @lock = Echonest::Track.find(params[:id])
+    if @lock && (@solver = upload(params[:file])) && @solver.similar_to?(@lock)
+      erb :solved
+    else
+      erb :error
+    end
+  end
+
+  def upload(upload)
+    destination = File.join(settings.files, "upload#{Time.now.to_i}.wav")
+    FileUtils.mv(upload[:tempfile].path, destination) &&
+      FileUtils.chmod(0640, destination) &&
+      Echonest::Track.create(destination)
   end
 end

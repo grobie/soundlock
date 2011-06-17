@@ -33,7 +33,6 @@ function microphone_recorder_events() {
 
   case "recording":
     var name = arguments[1];
-    console.log("recording");
     Recorder.hide();
     $('#record_button img').attr('src', '/images/stop.png');
     $('#play_button').hide();
@@ -70,6 +69,7 @@ function microphone_recorder_events() {
 
   case "saving":
     var name = arguments[1];
+    // $("#control_panel").hide();
     break;
 
   case "saved":
@@ -80,6 +80,7 @@ function microphone_recorder_events() {
     } else {
       $('#upload_status').css({'color': '#F00'}).text(name + " was not saved");
     }
+    $("#control_panel").show();
     break;
 
   case "save_failed":
