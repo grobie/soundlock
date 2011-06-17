@@ -1,13 +1,15 @@
 module Echonest
   class Track
-    CONFIDENCE_THRESHOLD = 0.85
-    SIMILARITY_MINIMUM = 0.5
+    EVENT_CONFIDENCE   = 0.85
+    TONE_CONFIDENCE    = 0.85
+    SIMILARITY_MINIMUM = 0.75
+
+
 
     attr_accessor :data
 
     def self.all(keys = Echonest.store.keys("echonest:lock:*"))
       keys.nil? || keys.empty? ? [] : Echonest.store.mget(*keys).map do |data|
-        puts data
         new(JSON.parse(data))
       end
     end
@@ -66,6 +68,10 @@ module Echonest
       lock_id.nil?
     end
 
+    def valid?
+      !lock? && similar_to?(lock)
+    end
+
     def created_at
       Time.at(data["created_at"].to_i)
     end
@@ -117,30 +123,62 @@ module Echonest
       self
     end
 
+    def rhythm_distance_to(other)
+      euclid(rhythm_distances, other.rhythm_distances)
+    end
+
+    def tone_distance_to(other)
+      euclid(tone_distances, other.tone_distances)
+    end
+
     def distance_to(other)
-      sum = [distances.size, other.distances.size].max.times.inject(0) do |m, i|
-        m += ((distances[i] || 0) - (other.distances[i] || 0)) ** 2
-      end
-      Math.sqrt(sum)
+      # (2 * rhythm_distance_to(other) + tone_distance_to(other)) / 3
+      rhythm_distance_to(other)
     end
 
     def similar_to?(other)
       distance_to(other) < SIMILARITY_MINIMUM
     end
 
-    def beats
-      @beats ||= begin
+    def events
+      @events ||= begin
         analyze unless data["segments"]
-        data["segments"]
-          .select { |beat| beat["confidence"] >= CONFIDENCE_THRESHOLD }
-          .map    { |beat| beat["start"] }
+        data["segments"].select { |event| event["confidence"] >= EVENT_CONFIDENCE }
       end
     end
 
-    def distances
-      @distances ||= (beats.size - 1).times.map do |element|
+    def beats
+      @beats ||= events.map { |event| event["start"] }
+    end
+
+    def rhythm_distances
+      @rhythm_distances ||= (beats.size - 1).times.map do |element|
         beats[element + 1] - beats[element]
       end
+    end
+
+    # return value is 0..11
+    # C - Cis/Des - D - Dis/Es - E - F - Fis/Ges - G - Gis/As - A - Ais/B - H
+    def tones
+      @tones ||= events.map do |event|
+        event["pitches"].index(event["pitches"].max)
+      end
+    end
+
+    def tone_distances
+      @tone_distances ||= (tones.size - 1).times.map do |element|
+        a, b = tones[element + 1], tones[element]
+        a > b ? a - b : b - a
+      end
+    end
+
+  private
+
+    def euclid(array1, array2)
+      sum = [array1.size, array2.size].max.times.inject(0) do |m, i|
+        m += ((array1[i] || 0) - (array2[i] || 0)) ** 2
+      end
+      Math.sqrt(sum)
     end
 
   end

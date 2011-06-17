@@ -37,6 +37,14 @@ class Soundlock < Sinatra::Base
     end
   end
 
+  get "/solver/:id" do
+    if @solver = Echonest::Track.find(params[:id])
+      erb :solved
+    else
+      erb :error
+    end
+  end
+
   post "/lock/:id" do
     @lock = Echonest::Track.find(params[:id])
     if @lock && (@solver = upload(params[:file], @lock)) && @solver.similar_to?(@lock)

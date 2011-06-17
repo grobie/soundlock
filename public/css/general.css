@@ -59,6 +59,10 @@ th, td {
 .red, .red a {
   color: red;
 }
+.linethrough {
+  text-decoration: line-through;
+}
+
 
 #wrapper { position: relative; }
 #control_panel { white-space: nowrap; }

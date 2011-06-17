@@ -1,2 +1,17 @@
-<h1 class="open"><a href="/">Sound<stroke>Lock</stroke>Open</a></h1>
-<p>yeeeeehaaa :)</p>
+<% if @solver.valid? %>
+  <h1 class="open"><a href="/lock/<%= @solver.lock.id %>">Sound<span class="red linethrough">Lock</span><span class="green">Open</span></a></h1>
+  <p>yeeeeehaaa :)</p>
+<% else %>
+  <h1 class="closed"><a href="/lock/<%= @solver.lock.id %>">SoundLock</a></h1>
+  <p>Please try again.</p>
+<% end %>
+
+<h2>Lock</h2>
+<audio controls="controls">
+  <source src="/locks/<%= @solver.lock.filename %>">
+</audio>
+
+<h2><%= @solver.valid? ? "Solver" : "Try" %></h2>
+<audio controls="controls">
+  <source src="/solvers/<%= @solver.filename %>">
+</audio>

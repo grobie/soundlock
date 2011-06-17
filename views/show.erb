@@ -1,7 +1,7 @@
 <h1 class="closed"><a href="/">SoundLock</a></h1>
 <p>Solve this password lock</p>
 
-<audio controls="controls"  autoplay="autoplay">
+<audio controls="controls" autoplay="autoplay">
   <source src="/locks/<%= @lock.filename %>">
 </audio>
 
@@ -34,7 +34,7 @@
   </tr>
 <% @lock.solvers.sort_by(&:created_at).each do |solver| %>
   <tr class="<%= solver.similar_to?(@lock) ? "green" : "red" %>">
-    <td><a href="/solvers/<%= solver.filename %>"><%= solver.id %></a></td>
+    <td><a href="/solver/<%= solver.id %>"><%= solver.id %></a></td>
     <td><%= solver.created_at.strftime("%Y-%m-%d %I:%M") %></td>
     <td><%= sprintf('%.4f', solver.distance_to(@lock)) %></td>
     <td><%= solver.beats.map { |beat| sprintf('%.4f', beat) }.join(", ") %></td>
