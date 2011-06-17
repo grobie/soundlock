@@ -15,7 +15,7 @@ end
 class Soundlock < Sinatra::Base
   set :root,    File.expand_path(File.dirname(__FILE__))
   set :public,  File.expand_path("public",  settings.root)
-  set :solvers, File.expand_path("solvers", settings.root)
+  set :solvers, File.expand_path("solvers", settings.public)
   set :locks,   File.expand_path("locks",   settings.public)
 
   get "/" do

@@ -2,6 +2,5 @@ api_keys.yaml
 .DS_Store
 resources/*
 db/*
-test/*
 public/locks/*
-solvers/*
+public/solvers/*

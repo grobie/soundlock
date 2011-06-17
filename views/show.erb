@@ -5,11 +5,11 @@
   <source src="/locks/<%= @lock.filename %>">
 </audio>
 
-<div id="status">
- Recorder Status...
-</div>
-
 <div id="control_panel">
+  <div id="status">
+   Recorder Status...
+  </div>
+
   <a id="record_button" onclick="Recorder.record('audio', 'audio.wav');" href="javascript:void(0);" title="Record"><img src="/images/record.png" width="24" height="24" alt="Record"/></a>
   <span id="save_button">
     <span id="flashcontent">
@@ -17,13 +17,13 @@
     </span>
   </span>
   <a id="play_button" style="display:none;" onclick="Recorder.playBack('audio');" href="javascript:void(0);" title="Play"><img src="/images/play.png" width="24" height="24" alt="Play"/></a>
-</div>
 
-<div id="upload_status">
-</div>
+  <div id="upload_status">
+  </div>
 
-<form id="uploadForm" action="/lock/<%= @lock.id %>" method="post">
-</form>
+  <form id="uploadForm" action="/lock/<%= @lock.id %>" method="post">
+  </form>
+</div>
 
 <table id="solvers">
   <tr>
@@ -33,11 +33,11 @@
     <th>beats</th>
   </tr>
 <% @lock.solvers.sort_by(&:created_at).each do |solver| %>
-  <tr>
-    <td><%= solver.id %></td>
+  <tr class="<%= solver.similar_to?(@lock) ? "green" : "red" %>">
+    <td><a href="/solvers/<%= solver.filename %>"><%= solver.id %></a></td>
     <td><%= solver.created_at.strftime("%Y-%m-%d %I:%M") %></td>
-    <td><%= solver.distance_to(@lock) %></td>
-    <td><%= solver.beats.inspect %></td>
+    <td><%= sprintf('%.4f', solver.distance_to(@lock)) %></td>
+    <td><%= solver.beats.map { |beat| sprintf('%.4f', beat) }.join(", ") %></td>
   </tr>
 <% end %>
 </ul>

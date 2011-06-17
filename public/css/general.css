@@ -50,11 +50,20 @@ th {
   text-align: left;
 }
 th, td {
-  padding: 2px 10px;
+  padding: 2px 20px 2px 0;
 }
 
+.green, .green a {
+  color: green;
+}
+.red, .red a {
+  color: red;
+}
+
+#wrapper { position: relative; }
 #control_panel { white-space: nowrap; }
 #control_panel a { outline: none; display: inline-block; width: 24px; height: 24px; }
 #control_panel a img { border: 0; }
 #save_button { position: absolute; padding: 0; margin: 0; }
 #play_button { display: inline-block; }
+#ajaxloader { position: absolute; top: 20px; text-align: center; width: 100%; display: none; }

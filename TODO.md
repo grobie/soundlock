@@ -22,5 +22,5 @@ x save file location
 x save lock_id
 x show all tries and their similarity
 
-* polish UI
+x polish UI
 * enhance difference algorithm
