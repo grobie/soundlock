@@ -24,9 +24,8 @@ class Soundlock < Sinatra::Base
   end
 
   post "/record" do
-    upload(params[:file])
-
-    "saved"
+    lock = upload(params[:file])
+    "{\"location\": \"/lock/#{lock.id}\"}"
   end
 
   get "/lock/:id" do
@@ -48,7 +47,7 @@ class Soundlock < Sinatra::Base
   post "/lock/:id" do
     @lock = Echonest::Track.find(params[:id])
     if @lock && (@solver = upload(params[:file], @lock)) && @solver.similar_to?(@lock)
-      erb :solved
+      "{\"location\": \"/solver/#{@solver.id}\"}"
     else
       erb :error
     end

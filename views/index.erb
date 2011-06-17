@@ -30,14 +30,14 @@
   <tr>
     <th>#</th>
     <th>at</th>
-    <th># solved</th>
-    <th>beats</th>
+    <th>solved / tries</th>
+    <th>important events at</th>
   </tr>
 <% @locks.sort_by(&:created_at).each do |lock| %>
   <tr>
     <td><a href="/lock/<%= lock.id %>"><%= lock.id %></a></td>
     <td><%= lock.created_at.strftime("%Y-%m-%d %I:%M") %></td>
-    <td><%= lock.solvers.size %></td>
+    <td><%= "#{lock.solvers.select(&:valid?).size} / #{lock.solvers.size}" %></td>
     <td><%= lock.beats.inspect %></td>
   </tr>
 <% end %>

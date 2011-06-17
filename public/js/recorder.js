@@ -76,12 +76,7 @@ function microphone_recorder_events() {
   case "saved":
     var name = arguments[1];
     var data = $.parseJSON(arguments[2]);
-    if(data.saved) {
-      $('#upload_status').css({'color': '#0F0'}).text(name + " was saved");
-    } else {
-      $('#upload_status').css({'color': '#F00'}).text(name + " was not saved");
-    }
-    window.location.reload();
+    window.location.href = data.location;
     break;
 
   case "save_failed":
@@ -94,8 +89,6 @@ function microphone_recorder_events() {
     var name = arguments[1];
     var bytesLoaded = arguments[2];
     var bytesTotal = arguments[3];
-    // $('#upload_status').css({'color': '#000'}).text(name + " progress: " + bytesLoaded + " / " + bytesTotal);
-    $('#upload_status').hide();
     break;
   }
 }
