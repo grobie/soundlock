@@ -62,9 +62,3 @@ private
   end
 
 end
-
-# TODO
-Samplesumo.configure do |config|
-  config.api_root = "http://api.samplesumo.com/melotranscript"
-  config.api_key  = "CCC8094CEEAC3B9AAFDAACC49857CD12"
-end

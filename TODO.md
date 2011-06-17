@@ -2,15 +2,14 @@
 
 ## Requirements
 
-* get in touch with SoundSumo API and possibilities
-* create 2-3 samples
-* look at results
+x get in touch with SoundSumo API and possibilities
+x create 2-3 samples
+x look at results
 
-1. Algorithm to detect similarity
-
-* only time first (claps)
-* fuzzy
-* calculate result value
+x only time first (claps)
+x fuzzy
+x calculate result value
+x save in redis
 * needs to check 2 dimensions (tone and time)
 
 x sinatra up and running
@@ -18,3 +17,4 @@ x record sounds with flash/html5
 x upload to canoris
 
 * polish UI
+* enhance difference algorithm

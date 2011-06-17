@@ -5,19 +5,12 @@ begin
 rescue LoadError
 end
 
-require_relative "lib/samplesumo"
-# require_relative "lib/canoris"
+require_relative "lib/echonest"
 
-Samplesumo.configure do |config|
-  config.api_root = "http://api.samplesumo.com/melotranscript"
-  config.api_key  = "CCC8094CEEAC3B9AAFDAACC49857CD12"
+Echonest.configure do |config|
+  config.api_root = "http://developer.echonest.com/api/v4"
+  config.api_key = "WIU43FOYVQXSRNV1V"
 end
-
-# Canoris.configure do |config|
-#   config.api_root   = "http://api.canoris.com"
-#   config.api_key    = "84253000f4f14d1ead5bca322ee14b78"
-#   config.api_secret = "964ceb2f290e472684be5ae453130f35"
-# end
 
 class Soundlock < Sinatra::Base
   set :root,   File.expand_path(File.dirname(__FILE__))
@@ -33,12 +26,12 @@ class Soundlock < Sinatra::Base
     destination = File.join(settings.files, "upload#{Time.now.to_i}.wav")
     FileUtils.mv(upload[:tempfile].path, destination) && FileUtils.chmod(0640, destination)
 
-    puts Samplesumo.upload(destination)
+    Echonest::Track.create(destination)
 
     "saved"
   end
 
-  get "/upload/:id" do
-    Samplesumo.upload(params[:id])
+  get "/track/:id" do
+    erb :show
   end
 end
