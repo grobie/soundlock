@@ -4,3 +4,4 @@ resources/*
 db/*
 test/*
 public/locks/*
+solvers/*

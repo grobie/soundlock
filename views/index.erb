@@ -48,9 +48,9 @@ $(function() {
   </form>
 
   <ul id="tracks">
-    <% @tracks.each do |track| %>
-      <li><a href="/lock/<%= track.id %>"><%= track.id %></a></li>
-    <% end %>
+  <% @tracks.each do |track| %>
+    <li><a href="/lock/<%= track.id %>"><%= track.id %></a> at <%= track.created_at %></li>
+  <% end %>
   </ul>
 
 </body>

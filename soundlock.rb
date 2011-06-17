@@ -13,9 +13,10 @@ Echonest.configure do |config|
 end
 
 class Soundlock < Sinatra::Base
-  set :root,   File.expand_path(File.dirname(__FILE__))
-  set :public, File.expand_path('public', settings.root)
-  set :files,  File.expand_path("resources", settings.root)
+  set :root,    File.expand_path(File.dirname(__FILE__))
+  set :public,  File.expand_path("public",  settings.root)
+  set :solvers, File.expand_path("solvers", settings.root)
+  set :locks,   File.expand_path("locks",   settings.public)
 
   get "/" do
     @tracks = Echonest::Track.all
@@ -29,23 +30,26 @@ class Soundlock < Sinatra::Base
   end
 
   get "/lock/:id" do
-    @lock = Echonest::Track.find(params[:id])
-    erb :show
+    if @lock = Echonest::Track.find(params[:id])
+      erb :show
+    else
+      erb :error
+    end
   end
 
   post "/lock/:id" do
     @lock = Echonest::Track.find(params[:id])
-    if @lock && (@solver = upload(params[:file])) && @solver.similar_to?(@lock)
+    if @lock && (@solver = upload(params[:file], @lock)) && @solver.similar_to?(@lock)
       erb :solved
     else
       erb :error
     end
   end
 
-  def upload(upload)
-    destination = File.join(settings.files, "upload#{Time.now.to_i}.wav")
-    FileUtils.mv(upload[:tempfile].path, destination) &&
-      FileUtils.chmod(0640, destination) &&
-      Echonest::Track.create(destination)
+  def upload(upload, lock = nil)
+    destination = File.join(lock ? settings.solvers : settings.locks, "#{Time.now.to_i}.wav")
+    if FileUtils.mv(upload[:tempfile].path, destination) && FileUtils.chmod(0640, destination)
+      Echonest::Track.create("file_location" => destination, "lock_id" => lock && lock.id)
+    end
   end
 end

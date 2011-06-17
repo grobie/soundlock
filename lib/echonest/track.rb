@@ -1,5 +1,3 @@
-require "rack"
-
 module Echonest
   class Track
     CONFIDENCE_THRESHOLD = 0.85
@@ -7,18 +5,25 @@ module Echonest
 
     attr_accessor :data
 
-    def self.all
-      keys = Echonest.store.keys("echonest:track:*")
-      keys.empty? ? [] : Echonest.store.mget(*keys).map { |data| new(JSON.parse(data)) }
+    def self.all(keys = Echonest.store.keys("echonest:lock:*"))
+      keys.nil? || keys.empty? ? [] : Echonest.store.mget(*keys).map do |data|
+        puts data
+        new(JSON.parse(data))
+      end
     end
 
-    def self.create(filename)
-      data = upload(filename)
-      new(data["track"]).save
+    def self.create(options = {})
+      data = upload(options["file_location"])
+      attributes = data["track"].merge(options).merge("created_at" => Time.now.to_i)
+      record = new(attributes).save
+      if record.lock
+        Echonest.store.rpush("echonest:solvers:#{record.lock.id}", record.identifier)
+      end
+      record
     end
 
     def self.find(id)
-      data = Echonest.store.get("echonest:track:#{id}")
+      data = Echonest.store.get("echonest:lock:#{id}")
       data ? new(JSON.parse(data)) : nil
     end
 
@@ -42,7 +47,27 @@ module Echonest
     end
 
     def identifier
-      "echonest:track:#{id}"
+      "echonest:lock:#{id}"
+    end
+
+    def solvers
+      @solvers ||= self.class.all(Echonest.store.lrange("echonest:solvers:#{id}", 0, -1))
+    end
+
+    def lock_id
+      data["lock_id"]
+    end
+
+    def lock
+      @lock ||= lock_id ? self.class.find(lock_id) : nil
+    end
+
+    def created_at
+      Time.at(data["created_at"])
+    end
+
+    def filename
+      File.basename(data["file_location"])
     end
 
     # def analysis_url
@@ -82,18 +107,21 @@ module Echonest
       self
     end
 
+    # TODO delete file
     def destroy
       Echonest.store.del(identifier)
       self
     end
 
-    def similar_to?(other)
+    def distance_to(other)
       sum = [distances.size, other.distances.size].max.times.inject(0) do |m, i|
         m += ((distances[i] || 0) - (other.distances[i] || 0)) ** 2
       end
-      distance = Math.sqrt(sum)
-      puts "Distance: #{distance}"
-      distance < SIMILARITY_MINIMUM
+      Math.sqrt(sum)
+    end
+
+    def similar_to?(other)
+      distance_to(other) < SIMILARITY_MINIMUM
     end
 
     def beats

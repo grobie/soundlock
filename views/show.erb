@@ -31,7 +31,7 @@ $(function() {
   <p>Solve this password lock</p>
 
   <audio controls="controls"  autoplay="autoplay">
-    <source src="/locks/upload1308283446.wav">
+    <source src="/locks/<%= @lock.filename %>">
   </audio>
 
   <div id="status">
@@ -53,6 +53,23 @@ $(function() {
 
   <form id="uploadForm" action="/lock/<%= @lock.id %>" method="post">
   </form>
+
+  <table id="solvers">
+    <tr>
+      <th>#</th>
+      <th>at</th>
+      <th>distance</th>
+      <th>beats</th>
+    </tr>
+  <% @lock.solvers.each do |solver| %>
+    <tr>
+      <td><%= solver.id %></td>
+      <td><%= solver.created_at %></td>
+      <td><%= solver.distance_to(@lock) %></td>
+      <td><%= solver.beats.inspect %></td>
+    </tr>
+  <% end %>
+  </ul>
 
 </body>
 </html>

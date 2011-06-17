@@ -17,10 +17,10 @@ x record sounds with flash/html5
 x upload to canoris
 
 x show lock page
-* save created_at
-* save file location
-* save lock_id
-* show all tries and their similarity
+x save created_at
+x save file location
+x save lock_id
+x show all tries and their similarity
 
 * polish UI
 * enhance difference algorithm
